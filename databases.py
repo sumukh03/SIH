@@ -12,7 +12,7 @@ vehicle_details=db.Table(
     'vehicle_details',
     metaobject,
     db.Column('vehicle_number',db.String,primary_key=True),
-    db.Column('customer_id',db.Integer)
+    db.Column('customer_id',db.Integer,db.Foreign_Key('customer_details.customer_id'))
     
 )
 provider_details=db.Table(
@@ -27,24 +27,24 @@ provider_details=db.Table(
 spot_details=db.Table(
     'spot_details',
     metaobject,
-    db.Column('spot_id',db.Integer,primary_key=True),
-    db.Column('slot_id',db.Integer),
-    db.Column('latitude',db.Float),
-    db.Column('longitude',db.Float),
+    db.Column('spot_id',db.Integer,db.Foreign_Key(provider_details.spot_id)),
+    db.Column('slot_id',db.Integer,primary_key=True),
+    db.Column('latitude',db.Float,primary_key=True),
+    db.Column('longitude',db.Float,primary_key=True),
     db.Column('price',db.Float),
     db.Column('monitoring',db.Boolean)
 )
 availability=db.Table(
     'availability',
     metaobject,
-    db.Column('spot_id',db.Integer,nullable=False),
-    db.Column('slot_id',db.Integer,nullable=False),
+    db.Column('spot_id',db.Integer,db.Foreign_key(spot_details.spot_id)),
+    db.Column('slot_id',db.Integer,db.Foreign_key(spot_details.slot_id)),
     db.Column('available',db.Boolean)
 )
 needs=db.Table(
     'needs',
     metaobject,
-    db.Column('vehicle_number',db.String),
+    db.Column('vehicle_number',db.String,db.Foreign_Key('vehicle_details.vehicle_number')),
     db.Column('latitude',db.Float),
     db.Column('longitude',db.Float)
     
@@ -52,7 +52,7 @@ needs=db.Table(
 schedule=db.Table(
     'schedule',
     metaobject,
-    db.Column('vehicle_number',db.String),
+    db.Column('vehicle_number',db.String,db.Foreign_Key('vehicle_details.vehicle_number')),
     db.Column('id',db.Integer),
     db.Column('start_time',db.DateTime),
     db.Column('end_time',db.DateTime),
@@ -62,7 +62,7 @@ schedule=db.Table(
 extensions=db.Table(
     'extensions',
     metaobject,
-    db.Column('vehicle_number',db.String),
+    db.Column('vehicle_number',db.String,db.Foreign_Key('vehicle_details.vehicle_number')),
     db.Column('time',db.DateTime)
 )
 
